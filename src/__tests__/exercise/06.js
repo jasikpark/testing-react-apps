@@ -71,13 +71,17 @@ test('displays the users current location', async () => {
   // 🐨 verify the loading spinner is showing up
   // 💰 tip: try running screen.debug() to know what the DOM looks like at this point.
   await expect(await screen.getByLabelText('loading...')).toBeInTheDocument()
-  // 🐨 resolve the deferred promise
-  resolve()
-  // 🐨 wait for the promise to resolve
-  await promise
+
+  await act(async () => {
+    // 🐨 resolve the deferred promise
+    resolve()
+    // 🐨 wait for the promise to resolve
+    await promise
+  })
+
   // 💰 right around here, you'll probably notice you get an error log in the
   // test output. You can ignore that for now and just add this next line:
-  act(() => {})
+  // act(() => {})
 
   //
   // If you'd like, learn about what this means and see if you can figure out
@@ -87,7 +91,7 @@ test('displays the users current location', async () => {
   // 🐨 verify the loading spinner is no longer in the document
   //    (💰 use queryByLabelText instead of getByLabelText)
   // 🐨 verify the latitude and longitude appear correctly
-  await waitForElementToBeRemoved(screen.queryByLabelText('loading...'))
+  await expect(screen.queryByLabelText('loading...')).not.toBeInTheDocument()
   await expect(
     screen.getByText(/Longitude:/).textContent,
   ).toMatchInlineSnapshot(`"Longitude: 46"`)
